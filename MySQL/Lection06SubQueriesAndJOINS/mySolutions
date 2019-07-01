@@ -1,0 +1,250 @@
+01. Employee Address
+
+SELECT employee_id, job_title, a.address_id, address_text
+FROM employees e
+JOIN addresses a
+ON e.address_id = a.address_id
+ORDER BY a.address_id
+LIMIT 5;
+
+
+02. Addresses with Towns
+
+SELECT first_name, last_name,t.name as town, address_text
+FROM employees e
+JOIN addresses a
+ON e.address_id = a.address_id
+JOIN towns t
+ON t.town_id = a.town_id
+ORDER BY first_name, last_name
+LIMIT 5;
+
+
+03. Sales Employee
+
+SELECT employee_id, first_name, last_name, d.name as department_name
+FROM employees e
+JOIN departments d
+ON e.department_id = d.department_id
+WHERE d.`name` = 'Sales'
+ORDER BY employee_id DESC;
+
+
+04. Employee Departments
+
+SELECT employee_id, first_name, salary, d.name as department_name
+FROM employees e
+JOIN departments d
+ON e.department_id = d.department_id
+WHERE e.`salary` > 15000
+ORDER BY d.department_id DESC
+LIMIT 5;
+
+
+
+05. Employees Without Project 
+
+
+SELECT e.employee_id, first_name
+FROM employees e
+LEFT JOIN employees_projects ep
+ON e.employee_id = ep.employee_id
+WHERE ep.project_id is NULL
+ORDER BY e.employee_id DESC
+LIMIT 3;
+
+
+
+06. Employees Hired After
+
+SELECT  first_name, last_name, hire_date, d.name as dept_name
+FROM employees e
+JOIN departments d
+ON d.department_id = e.department_id
+WHERE date(e.hire_date) > date('1999-01-01 00:00:00')  AND d.name IN ('Sales', 'Finance')
+ORDER BY e.hire_date;
+
+
+
+07. Employees with Project
+
+
+SELECT  e.employee_id, first_name, p. name as project_name
+FROM employees e
+JOIN employees_projects ep
+ON e.employee_id = ep.employee_id
+JOIN projects p 
+ON ep.project_id = p.project_id
+WHERE date(p.start_date) > date('2002-08-13 00:00:00')  AND p.end_date is NULL
+ORDER BY e.first_name, p.name
+LIMIT 5;
+
+
+08. Employee 24
+
+SELECT  e.employee_id, first_name, if( date(p.start_date) >= date('2005-01-01'), NULL, p.name  )   as project_name
+FROM employees e
+JOIN employees_projects ep
+ON e.employee_id = ep.employee_id
+JOIN projects p 
+ON ep.project_id = p.project_id
+WHERE e.employee_id = 24 
+ORDER BY p.name;
+
+
+SELECT  e.employee_id, first_name, if( date(p.start_date) >= date('2005-01-01'), NULL, p.name  )   as project_name
+FROM employees e
+JOIN employees_projects ep
+ON e.employee_id = ep.employee_id
+JOIN projects p 
+ON ep.project_id = p.project_id
+WHERE e.employee_id = 24 
+ORDER BY `project_name`;
+
+
+09. Employee Manager
+
+
+SELECT  e.employee_id, e.first_name, e.manager_id, m.first_name as manager_name
+FROM employees e
+JOIN employees m 
+ON e.manager_id = m.employee_id
+WHERE e.manager_id IN (3,7) 
+ORDER BY e.`first_name`;
+
+
+10. Employee Summary
+
+
+SELECT  e.employee_id,
+ CONCAT(e.first_name, ' ', e.last_name) as employee_name,
+ CONCAT(m.first_name, ' ', m.last_name) as manager_name,
+ d.name as department_name
+FROM employees e
+JOIN employees m 
+ON e.manager_id = m.employee_id
+JOIN departments d
+ON e.department_id = d.department_id
+WHERE e.manager_id IS NOT NULL 
+ORDER BY e.`employee_id`
+LIMIT 5;
+
+
+11. Min Average Salary
+SELECT avg(salary) as 'AVG'
+FROM employees
+GROUP BY department_id
+ORDER BY `AVG`
+LIMIT 1;
+
+
+
+12. Highest Peaks in Bulgaria
+
+SELECT mc.country_code, m.mountain_range, p.peak_name, p.elevation
+FROM mountains_countries mc
+JOIN mountains m
+ON mc.mountain_id = m.id
+JOIN peaks p
+ON mc.mountain_id = p.mountain_id
+WHERE mc.country_code = 'BG' and p.elevation > 2835
+ORDER BY p.elevation DESC;
+
+
+
+13. Count Mountain Ranges 
+
+
+SELECT country_code, COUNT(country_code) as mountain_range
+FROM mountains_countries
+WHERE country_code IN ('BG', 'RU', 'US')
+GROUP BY country_code
+ORDER BY `mountain_range` DESC;
+
+
+14. Countries with Rivers
+
+SELECT c.country_name, r.river_name
+FROM countries c
+LEFT JOIN countries_rivers cr
+ON cr.country_code = c.country_code
+LEFT JOIN rivers r
+ON cr.river_id = r.id
+WHERE c.continent_code = 'AF'
+ORDER BY c.country_name
+LIMIT 5;
+
+
+SELECT c.country_name, r.river_name
+FROM countries_rivers cr
+RIGHT JOIN countries c
+ON cr.country_code = c.country_code
+LEFT JOIN rivers r
+ON cr.river_id = r.id
+WHERE c.continent_code = 'AF'
+ORDER BY c.country_name
+LIMIT 5;
+
+
+16. Countries without any Mountains
+
+
+SELECT COUNT(*)
+FROM
+(SELECT c.country_name, mc.mountain_id
+FROM countries c
+LEFT JOIN mountains_countries mc
+ON c.country_code = mc.country_code
+WHERE mc.mountain_id is NULL) as n;
+
+
+
+17. Highest Peak and Longest River by Country
+
+
+SELECT o.country_name, max(o.elevation) as highest_peak_elevation, max(o.length) as longest_river_length
+FROM
+(
+SELECT c.country_name, mc.mountain_id, p.elevation, cr.river_id, r.length
+FROM countries c
+LEFT JOIN mountains_countries mc
+ON c.country_code = mc.country_code
+LEFT JOIN peaks p
+ON mc.mountain_id = p.mountain_id
+LEFT JOIN countries_rivers cr
+ON c.country_code = cr.country_code
+LEFT JOIN rivers r
+ON cr.river_id = r.id) as o 
+GROUP BY o.country_name
+ORDER BY highest_peak_elevation DESC, longest_river_length DESC, country_name
+LIMIT 5;
+
+
+
+15. *Continents and Currencies
+
+
+
+SELECT t1.continent_code, t1.currency_code, t1.currency_usage
+FROM (
+SELECT d.continent_code, d.currency_code, count(d.continent_code) as 'currency_usage'
+FROM countries d
+GROUP BY d.continent_code, d.currency_code 
+HAVING currency_usage > 1) as t1
+
+JOIN 
+(SELECT o.continent_code, max(o.currency_usage) as 'currency_usage'
+
+FROM 
+(
+SELECT c.continent_code, c.currency_code, count(c.continent_code) as 'currency_usage'
+FROM countries c
+GROUP BY c.continent_code, c.currency_code 
+HAVING currency_usage > 1) as o
+GROUP BY o.continent_code) as t2
+ON t1.continent_code = t2.continent_code AND t1.currency_usage = t2.currency_usage
+ORDER BY t1.continent_code, t1.currency_code;
+
+
+
+

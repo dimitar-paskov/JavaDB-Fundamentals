@@ -1,0 +1,1019 @@
+CREATE TABLE `minions` (
+  `id` INT NOT NULL,
+  `name` VARCHAR(45) NULL,
+  `age` INT NULL,
+  PRIMARY KEY (`id`));
+CREATE TABLE `towns` (
+  `id` INT NOT NULL,
+  `name` VARCHAR(45) NULL,
+  PRIMARY KEY (`id`));
+
+ALTER TABLE `minions` 
+ADD COLUMN `town_id` INT NULL AFTER `age`;
+ALTER TABLE `minions` 
+ADD INDEX `fk_minions_1_idx` (`town_id` ASC);
+ALTER TABLE `minions` 
+ADD CONSTRAINT `fk_minions_1`
+  FOREIGN KEY (`town_id`)
+  REFERENCES `town` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+alter table `minions`
+add column `town_id` INT NOT NULL;
+alter table `minions`
+add constraint fk_minions_towns foreign key(`town_id`) references `towns`(`id`);
+
+
+insert into towns(`id`,`name`) values (1,'Sofia');
+insert into towns(`id`,`name`) values (2,'Plovdiv');
+insert into towns(`id`,`name`) values (3,'Varna');
+
+insert into minions(`id`,`name`,`age`, `town_id`) values (1,'Kevin', 22, 1);
+insert into minions(`id`,`name`,`age`, `town_id`) values (2,'Bob', 15, 3);
+insert into minions(`id`,`name`,`age`, `town_id`) values (3,'Steward', NULL, 2);
+
+truncate minions;
+
+drop tables towns, minions;
+
+
+CREATE TABLE `people` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
+  `picture` mediumblob,
+  `height` double(5,2),
+  `weight` double(5,2),
+  `gender` char NOT NULL,
+  `birthdate` date NOT NULL,
+  `biography` text,
+  PRIMARY KEY (`id`),
+  unique(`id`));
+
+
+INSERT INTO `people` (`name`, `picture`, `height`, `weight`, `gender`, `birthdate`, `biography`) 
+VALUES ('Mitko', 0x1232423, '2.34', '3.45', 'm', '1995-05-15', 'asdasdasdasd');
+INSERT INTO `people` (`name`, `picture`, `height`, `weight`, `gender`, `birthdate`, `biography`) 
+VALUES ('Mitko2', 0x1232423, '2.34', '3.45', 'm', '1995-05-15', 'asdasdasdasd');
+INSERT INTO `people` (`name`, `picture`, `height`, `weight`, `gender`, `birthdate`, `biography`) 
+VALUES ('Mitko3', 0x1232423, '2.34', '3.45', 'm', '1995-05-15', 'asdasdasdasd');
+INSERT INTO `people` (`name`, `picture`, `height`, `weight`, `gender`, `birthdate`, `biography`) 
+VALUES ('Mitko4', 0x1232423, '2.34', '3.45', 'm', '1995-05-15', 'asdasdasdasd');
+INSERT INTO `people` (`name`, `picture`, `height`, `weight`, `gender`, `birthdate`, `biography`) 
+VALUES ('Mitko5', 0x1232423, '2.34', '3.45', 'm', '1995-05-15', 'asdasdasdasd');
+
+
+CREATE TABLE `users` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `username` VARCHAR(255) NOT NULL,
+  `password` VARCHAR(255) NOT NULL,
+  `profile_picture` blob,
+  `last_login_time` datetime NOT NULL,
+  `is_deleted` boolean,
+  PRIMARY KEY (`id`),
+  unique(`id`));
+  
+  INSERT INTO `users` (`username`, `password`, `profile_picture`, `last_login_time`, `is_deleted`) 
+  VALUES ('Mitko1', 'asd', 0x12, '2019-05-21 17:00:00', true);
+  INSERT INTO `users` (`username`, `password`, `profile_picture`, `last_login_time`, `is_deleted`) 
+  VALUES ('Mitko2', 'asd', 0x12, '2019-05-21 17:00:00', true);
+  INSERT INTO `users` (`username`, `password`, `profile_picture`, `last_login_time`, `is_deleted`) 
+  VALUES ('Mitko3', 'asd', 0x12, '2019-05-21 17:00:00', true);
+  INSERT INTO `users` (`username`, `password`, `profile_picture`, `last_login_time`, `is_deleted`) 
+  VALUES ('Mitko4', 'asd', 0x12, '2019-05-21 17:00:00', true);
+  INSERT INTO `users` (`username`, `password`, `profile_picture`, `last_login_time`, `is_deleted`) 
+  VALUES ('Mitko5', 'asd', 0x12, '2019-05-21 17:00:00', true);
+
+
+08. Change Primary Key
+alter table `users`
+drop primary key,
+add primary key (`id`, `username`);
+
+
+9. Set Default Value of a Field
+ALTER TABLE users CHANGE COLUMN `last_login_time` `last_login_time` DATETIME NOT NULL DEFAULT NOW();
+
+10. Set Unique Field
+alter table `users`
+drop primary key,
+add primary key (`id`),
+add CONSTRAINT UNIQUE(username);
+
+11. Movies Database
+CREATE TABLE `directors`(
+	`id` INT AUTO_INCREMENT PRIMARY KEY,
+    `director_name` VARCHAR(255) NOT NULL,
+    `notes` TEXT
+);
+
+INSERT INTO `directors` ( director_name, notes) VALUES('Director1', 'Note1'); 
+INSERT INTO `directors` ( director_name, notes) VALUES('Director2', 'Note2'); 
+INSERT INTO `directors` ( director_name, notes) VALUES('Director3', 'Note3'); 
+INSERT INTO `directors` ( director_name, notes) VALUES('Director4', 'Note4'); 
+INSERT INTO `directors` ( director_name, notes) VALUES('Director5', 'Note5'); 
+
+CREATE TABLE `genres`(
+	`id` INT AUTO_INCREMENT PRIMARY KEY,
+    `genre_name` VARCHAR(255) NOT NULL,
+    `notes` TEXT
+);
+INSERT INTO `genres` ( genre_name, notes) VALUES('Genre1', 'Note1'); 
+INSERT INTO `genres` ( genre_name, notes) VALUES('Genre2', 'Note2'); 
+INSERT INTO `genres` ( genre_name, notes) VALUES('Genre3', 'Note3'); 
+INSERT INTO `genres` ( genre_name, notes) VALUES('Genre4', 'Note4'); 
+INSERT INTO `genres` ( genre_name, notes) VALUES('Genre5', 'Note5'); 
+
+CREATE TABLE `categories`(
+	`id` INT AUTO_INCREMENT PRIMARY KEY,
+    `category_name` VARCHAR(255) NOT NULL,
+    `notes` TEXT
+);
+
+INSERT INTO `categories` ( category_name, notes) VALUES('Category1', 'Note1'); 
+INSERT INTO `categories` ( category_name, notes) VALUES('Category2', 'Note2'); 
+INSERT INTO `categories` ( category_name, notes) VALUES('Category3', 'Note3'); 
+INSERT INTO `categories` ( category_name, notes) VALUES('Category4', 'Note4'); 
+INSERT INTO `categories` ( category_name, notes) VALUES('Category5', 'Note5'); 
+
+CREATE TABLE `movies`(
+	`id` INT AUTO_INCREMENT PRIMARY KEY,
+    `title` VARCHAR(255) NOT NULL,
+    `director_id` INT,
+    `copyright_year` INT,
+    `length` INT,
+    `genre_id` INT,
+    `category_id` INT,
+    `rating` INT,
+    `notes` TEXT
+);
+
+/*ALTER TABLE `movies` ADD CONSTRAINT fk_movies_director foreign key(`director_id`) references `directors`(`id`);
+ALTER TABLE `movies` ADD CONSTRAINT fk_movies_genre foreign key(`genre_id`) references `genres`(`id`);
+ALTER TABLE `movies` ADD CONSTRAINT fk_movies_category foreign key(`category_id`) references `categories`(`id`); */
+
+INSERT INTO `movies` ( title, director_id, copyright_year, length, genre_id, category_id, rating, notes) 
+VALUES('Title1', 1, 2019, 198, 1, 1, 10, 'Notes1'); 
+INSERT INTO `movies` ( title, director_id, copyright_year, length, genre_id, category_id, rating, notes) 
+VALUES('Title2', 2, 2019, 198, 2, 2, 10, 'Notes2');
+INSERT INTO `movies` ( title, director_id, copyright_year, length, genre_id, category_id, rating, notes) 
+VALUES('Title3', 3, 2019, 198, 3, 3, 10, 'Notes3');
+INSERT INTO `movies` ( title, director_id, copyright_year, length, genre_id, category_id, rating, notes) 
+VALUES('Title4', 4, 2019, 198, 4, 4, 10, 'Notes4'); 
+INSERT INTO `movies` ( title, director_id, copyright_year, length, genre_id, category_id, rating, notes) 
+VALUES('Title5', 5, 2019, 198, 5, 5, 10, 'Notes5');   
+
+
+12. Car Rental Database
+CREATE TABLE `categories`(
+	`id` INT AUTO_INCREMENT PRIMARY KEY,
+    `category` VARCHAR(255) NOT NULL,
+    `daily_rate` DOUBLE NOT NULL,
+    `weekly_rate` DOUBLE NOT NULL,
+    `monthly_rate` DOUBLE NOT NULL,
+    `weekend_rate` DOUBLE NOT NULL
+);
+
+INSERT INTO `categories` (category, daily_rate, weekly_rate, monthly_rate, weekend_rate) 
+VALUES('Category1', 30.1, 140.7, 341.6, 60.5);
+INSERT INTO `categories` ( category, daily_rate, weekly_rate, monthly_rate, weekend_rate)  
+VALUES('Category2', 30.1, 140.7, 341.6, 60.5); 
+INSERT INTO `categories` ( category, daily_rate, weekly_rate, monthly_rate, weekend_rate) 
+VALUES('Category3', 30.1, 140.7, 341.6, 60.5); 
+
+CREATE TABLE `cars`(
+	`id` INT AUTO_INCREMENT PRIMARY KEY,
+    `plate_number` VARCHAR(255) NOT NULL,
+    `make` VARCHAR(255) NOT NULL,
+    `model` VARCHAR(255) NOT NULL,
+    `car_year` INT,
+    `category_id` INT NOT NULL,
+    `doors` SMALLINT NOT NULL,
+    `picture` BLOB,
+    `car_condition` TEXT,
+    `available` BOOLEAN
+);
+
+INSERT INTO `cars` (plate_number, make, model, car_year, category_id, doors, car_condition, available) 
+VALUES('PA1234BA', 'MBW', 'X5', 2019, 1, 5, 'Good', true);
+INSERT INTO `cars` (plate_number, make, model, car_year, category_id, doors, car_condition, available) 
+VALUES('PA1234BB', 'MBW', 'X5', 2019, 1, 5, 'Good', true);
+INSERT INTO `cars` (plate_number, make, model, car_year, category_id, doors, car_condition, available) 
+VALUES('PA1234BC', 'MBW', 'X5', 2019, 1, 5, 'Good', true);
+
+CREATE TABLE `employees`(
+	`id` INT AUTO_INCREMENT PRIMARY KEY,
+    `first_name` VARCHAR(255) NOT NULL,
+    `last_name` VARCHAR(255) NOT NULL,
+    `title` VARCHAR(255) NOT NULL,
+    `notes` TEXT
+);
+
+INSERT INTO `employees` (first_name, last_name, title) VALUES('SellerName', 'Johnson', 'Seller');
+INSERT INTO `employees` (first_name, last_name, title) VALUES('SellerName2', 'Johnson', 'Seller');
+INSERT INTO `employees` (first_name, last_name, title) VALUES('SellerName3', 'Johnson', 'Seller');
+
+CREATE TABLE `customers`(
+	`id` INT AUTO_INCREMENT PRIMARY KEY,
+    `driver_licence_number` VARCHAR(255) NOT NULL,
+    `full_name` VARCHAR(255) NOT NULL,
+    `address` VARCHAR(255),
+    `city` VARCHAR(255),
+    `zip_code` VARCHAR(255),
+    `notes` TEXT
+);
+
+INSERT INTO `customers` (driver_licence_number, full_name, address, city, zip_code)
+VALUES('123456', 'Johnson', 'DowningStr 10','Sofia','1000');
+INSERT INTO `customers` (driver_licence_number, full_name, address, city, zip_code)
+VALUES('123457', 'Johnson', 'DowningStr 10','Sofia','1000');
+INSERT INTO `customers` (driver_licence_number, full_name, address, city, zip_code)
+VALUES('123458', 'Johnson', 'DowningStr 10','Sofia','1000');
+
+
+CREATE TABLE `rental_orders`(
+	`id` INT AUTO_INCREMENT PRIMARY KEY,
+    `employee_id` INT NOT NULL,
+    `customer_id` INT NOT NULL,
+    `car_id` INT NOT NULL,
+    `car_condition` TEXT,
+    `tank_level` DOUBLE,
+    `kilometrage_start` INT,
+    `kilometrage_end` INT,
+    `total_kilometrage` INT,
+    `start_date` DATE,
+    `end_date` DATE,
+    `total_days` INT,
+    `rate_applied` INT,
+    `tax_rate` DOUBLE,
+    `order_status` TEXT,
+    `notes` TEXT
+);
+
+INSERT INTO `rental_orders` ( employee_id, customer_id, car_id, car_condition, tank_level,
+ kilometrage_start, kilometrage_end, total_kilometrage, start_date, end_date, total_days, rate_applied, tax_rate, order_status, notes)
+VALUES(1,1,1,'good', 34.5, 100000, 110000, 10000, '2019-05-15','2019-05-17', 2, 1, 20, 'in progress', 'No Notes');
+INSERT INTO `rental_orders` ( employee_id, customer_id, car_id, car_condition, tank_level,
+ kilometrage_start, kilometrage_end, total_kilometrage, start_date, end_date, total_days, rate_applied, tax_rate, order_status, notes)
+VALUES(2,2,2,'good', 34.5, 100000, 110000, 10000, '2019-05-15','2019-05-17', 2, 1, 20, 'in progress', 'No Notes');
+INSERT INTO `rental_orders` ( employee_id, customer_id, car_id, car_condition, tank_level,
+ kilometrage_start, kilometrage_end, total_kilometrage, start_date, end_date, total_days, rate_applied, tax_rate, order_status, notes)
+VALUES(3,3,3,'good', 34.5, 100000, 110000, 10000, '2019-05-15','2019-05-17', 2, 1, 20, 'in progress', 'No Notes');
+
+
+
+13. Hotel Database
+
+CREATE TABLE `employees`(
+	`id` INT AUTO_INCREMENT PRIMARY KEY,
+    `first_name` VARCHAR(255) NOT NULL,
+    `last_name` VARCHAR(255) NOT NULL,
+    `title` VARCHAR(255) NOT NULL,
+    `notes` TEXT
+);
+
+INSERT INTO `employees` (first_name, last_name, title) VALUES('SellerName', 'Johnson', 'Seller');
+INSERT INTO `employees` (first_name, last_name, title) VALUES('SellerName2', 'Johnson', 'Seller');
+INSERT INTO `employees` (first_name, last_name, title) VALUES('SellerName3', 'Johnson', 'Seller');
+
+CREATE TABLE `customers`(
+	`account_number` INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    `first_name` VARCHAR(255) NOT NULL,
+    `last_name` VARCHAR(255) NOT NULL,
+    `phone_number` VARCHAR(255) ,
+    `emergency_name` VARCHAR(255) ,
+    `emergency_number` VARCHAR(255) ,
+	`notes` TEXT
+);
+
+INSERT INTO `customers` (first_name, last_name) VALUES('SellerName', 'Johnson');
+INSERT INTO `customers` (first_name, last_name) VALUES('SellerName', 'Johnson');
+INSERT INTO `customers` (first_name, last_name) VALUES('SellerName', 'Johnson');
+
+CREATE TABLE `room_status`(
+	`room_status` VARCHAR(255) PRIMARY KEY NOT NULL,
+	`notes` TEXT
+);
+INSERT INTO `room_status` (room_status) VALUES('Taken');
+INSERT INTO `room_status` (room_status) VALUES('Available');
+INSERT INTO `room_status` (room_status) VALUES('Reserved');
+
+
+CREATE TABLE `room_types`(
+	`room_type` VARCHAR(255) PRIMARY KEY NOT NULL,
+	`notes` TEXT
+);
+INSERT INTO `room_types` (room_type) VALUES('For2');
+INSERT INTO `room_types` (room_type) VALUES('For4');
+INSERT INTO `room_types` (room_type) VALUES('Apartment');
+
+
+CREATE TABLE `bed_types`(
+	`bed_type` VARCHAR(255) PRIMARY KEY NOT NULL,
+	`notes` TEXT
+);
+INSERT INTO `bed_types` (bed_type) VALUES('BIG');
+INSERT INTO `bed_types` (bed_type) VALUES('SMALL');
+INSERT INTO `bed_types` (bed_type) VALUES('ExtraLarge');
+
+
+CREATE TABLE `rooms`(
+	`room_number` INT PRIMARY KEY NOT NULL,
+	`room_type` VARCHAR(255) NOT NULL,
+	`bed_type` VARCHAR(255) NOT NULL,
+	`rate`DOUBLE NOT NULL,
+    `room_status` VARCHAR(255) NOT NULL,
+	`notes` TEXT
+);
+
+INSERT INTO `rooms` (room_number, room_type, bed_type, rate, room_status) VALUES(101, 'Apartment', 'BIG', 45.54, 'Available');
+INSERT INTO `rooms` (room_number, room_type, bed_type, rate, room_status) VALUES(102, 'Apartment', 'BIG', 45.54, 'Available');
+INSERT INTO `rooms` (room_number, room_type, bed_type, rate, room_status) VALUES(103, 'Apartment', 'BIG', 45.54, 'Available');
+
+CREATE TABLE `payments`(
+	`id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	`employee_id` INT NOT NULL,
+	`payment_date` DATE NOT NULL,
+	`account_number`INT NOT NULL,
+    `first_date_occupied` DATE NOT NULL,
+    `last_date_occupied` DATE NOT NULL,
+    `total_days`INT NOT NULL,
+    `amount_charged` DOUBLE NOT NULL,
+    `tax_rate` DOUBLE NOT NULL,
+    `tax_amount` DOUBLE NOT NULL,
+    `payment_total` DOUBLE NOT NULL,
+	`notes` TEXT
+);
+
+INSERT INTO `payments` (employee_id, payment_date, account_number, first_date_occupied, last_date_occupied, total_days, amount_charged, tax_rate, tax_amount, payment_total) VALUES(101, '2019-05-20', 11, '2019-05-20','2019-05-21', 2, 55.5, 20.5, 10.5, 62.8 );
+INSERT INTO `payments` (employee_id, payment_date, account_number, first_date_occupied, last_date_occupied, total_days, amount_charged, tax_rate, tax_amount, payment_total) VALUES(102, '2019-05-20', 11, '2019-05-20','2019-05-21', 2, 55.5, 20.5, 10.5, 62.8 );
+INSERT INTO `payments` (employee_id, payment_date, account_number, first_date_occupied, last_date_occupied, total_days, amount_charged, tax_rate, tax_amount, payment_total) VALUES(103, '2019-05-20', 11, '2019-05-20','2019-05-21', 2, 55.5, 20.5, 10.5, 62.8 );
+
+
+CREATE TABLE `occupancies`(
+	`id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	`employee_id` INT NOT NULL,
+	`date_occupied` DATE NOT NULL,
+	`account_number`INT NOT NULL,
+    `room_number` INT NOT NULL,
+    `rate_applied` DOUBLE NOT NULL,
+    `phone_charge` DOUBLE NOT NULL,
+	`notes` TEXT
+);
+
+INSERT INTO `occupancies` (employee_id, date_occupied, account_number, room_number, rate_applied, phone_charge) 
+VALUES(101, '2019-05-20', 11, 2, 55.5, 20.5 );
+INSERT INTO `occupancies` (employee_id, date_occupied, account_number, room_number, rate_applied, phone_charge) 
+VALUES(102, '2019-05-20', 11, 2, 55.5, 20.5 );
+INSERT INTO `occupancies` (employee_id, date_occupied, account_number, room_number, rate_applied, phone_charge) 
+VALUES(103, '2019-05-20', 11, 2, 55.5, 20.5 );
+
+
+14. Create SoftUni Database
+
+CREATE TABLE `towns`(
+	`id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	`name` VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE `addresses`(
+	`id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	`address_text` TEXT  NOT NULL,
+    `town_id` INT
+);
+
+CREATE TABLE `departments`(
+	`id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	`name` VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE `employees`(
+	`id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	`first_name` VARCHAR(255) NOT NULL,
+	`middle_name` VARCHAR(255) NOT NULL,
+	`last_name` VARCHAR(255) NOT NULL,
+	`job_title` VARCHAR(255),
+	`department_id` INT,
+	`hire_date` DATE,
+	`salary` DOUBLE,
+	`address_id` INT
+);
+
+ALTER TABLE `addresses` ADD CONSTRAINT fk_addresses_towns foreign key(`town_id`) references `towns`(`id`);
+ALTER TABLE `employees` ADD CONSTRAINT fk_employees_departments foreign key(`department_id`) references `departments`(`id`);
+ALTER TABLE `employees` ADD CONSTRAINT fk_employees_adresses foreign key(`address_id`) references `addresses`(`id`);
+
+
+15. Basic Insert
+
+INSERT INTO `towns` (`name`) VALUES('Sofia' );
+INSERT INTO `towns` (`name`) VALUES('Plovdiv' );
+INSERT INTO `towns` (`name`) VALUES('Varna' );
+INSERT INTO `towns` (`name`) VALUES('Burgas' );
+
+
+INSERT INTO `departments` (`name`) VALUES('Engineering' );
+INSERT INTO `departments` (`name`) VALUES('Sales' );
+INSERT INTO `departments` (`name`) VALUES('Marketing' );
+INSERT INTO `departments` (`name`) VALUES('Software Development' );
+INSERT INTO `departments` (`name`) VALUES('Quality Assurance' );
+
+INSERT INTO `employees` (first_name, middle_name, last_name, job_title, department_id, hire_date, salary) VALUES('Ivan', 'Ivanov', 'Ivanov','.NET Developer', 4, '2013-02-01', 3500.00 );
+INSERT INTO `employees` (first_name, middle_name, last_name, job_title, department_id, hire_date, salary) VALUES('Petar', 'Petrov', 'Petrov','Senior Engineer', 1, '2004-03-02', 4000.00 );
+INSERT INTO `employees` (first_name, middle_name, last_name, job_title, department_id, hire_date, salary) VALUES('Maria', 'Petrova', 'Ivanova','Intern', 5, '2016-08-28', 525.25 );
+INSERT INTO `employees` (first_name, middle_name, last_name, job_title, department_id, hire_date, salary) VALUES('Georgi', 'Terziev', 'Ivanov','CEO', 2, '2007-12-09', 3000.00 );
+INSERT INTO `employees` (first_name, middle_name, last_name, job_title, department_id, hire_date, salary) VALUES('Peter', 'Pan', 'Pan','Intern', 3, '2016-08-28', 599.88 );
+
+16. Basic Select All Fields
+SELECT * FROM towns;
+SELECT * FROM departments;
+SELECT * FROM employees;
+
+17. Basic Select All Fields and Order Them 
+SELECT * FROM towns ORDER BY `name`;
+SELECT * FROM departments ORDER BY `name`;
+SELECT * FROM employees ORDER BY `salary` DESC;
+
+18. Basic Select Some Fields
+SELECT `name` FROM towns ORDER BY `name`;
+SELECT `name` FROM departments ORDER BY `name`;
+SELECT first_name, last_name, job_title, salary FROM employees ORDER BY `salary` DESC;
+
+19. Increase Employees Salary
+UPDATE employees SET salary=salary*1.1;
+SELECT salary FROM employees;
+
+20. Decrease Tax Rate
+UPDATE payments SET tax_rate = tax_rate - (0.03*tax_rate);
+SELECT tax_rate FROM payments;
+
+21. Delete All Records
+
+
+
+========================================================================================
+From others
+
+
+drop database minions;
+create database minions;
+ 
+use minions;
+ 
+#01. Create Tables
+create table minions(
+    id int auto_increment primary key,
+    name VARCHAR(50) not null,
+    age VARCHAR(50)
+);
+ 
+create table towns(
+    id int auto_increment primary key,
+    name VARCHAR(50)
+);
+ 
+drop table minions;
+drop table towns;
+ 
+#02. Alter Minions Table
+alter table minions add column town_id int;
+alter table minions add CONSTRAINT mtt2 foreign key (town_id) references towns (id);
+ 
+#03. Insert Records in Both Tables
+INSERT INTO towns (name) VALUES ('Sofia');
+INSERT INTO towns (name) VALUES ('Plovdiv');
+INSERT INTO towns (name) VALUES ('Varna');
+ 
+INSERT INTO minions (name, age, town_id) VALUES ('Kevin', 22, 1);
+INSERT INTO minions (name, age, town_id) VALUES ('Bob', 15, 3);
+INSERT INTO minions (name, town_id) VALUES ('Steward', 2);
+ 
+#03. Insert Records in Both Tables with id - ????
+INSERT INTO towns (id, name) VALUES (1,'Sofia');
+INSERT INTO towns (id, name) VALUES (2,'Plovdiv');
+INSERT INTO towns (id, name) VALUES (3,'Varna');
+ 
+INSERT INTO minions (id, name, age, town_id) VALUES (1,'Kevin', 22, 1);
+INSERT INTO minions (id, name, age, town_id) VALUES (2,'Bob', 15, 3);
+INSERT INTO minions (id, name, town_id) VALUES (3,'Steward', 2);
+ 
+#04. Truncate Table Minions
+truncate table minions;
+truncate table towns;
+ 
+#05. Drop All Tables
+drop table minions;
+drop table towns;
+ 
+#06. Create Table People
+drop table people;
+create table people(
+    `id` int auto_increment unique,
+    `name` VARCHAR(200) collate utf8mb4_unicode_ci not null,
+    `picture` BLOB,
+    `height` double(8,2),
+    `weight` double(8,2),
+    `gender` ENUM('m', 'f') not null,
+    `birthdate` date not null,
+    `biography` text collate utf8mb4_unicode_ci
+);
+ALTER TABLE people ADD PRIMARY KEY(`id`);
+ 
+INSERT INTO people
+(`name`, `picture`, `height`, `weight`, `gender`, `birthdate`, `biography`)
+VALUES
+('Todor Ianev', 'puctures', 1.75, 82.5, 'm', '1996-08-19', 'голяма и дълга биография');
+ 
+INSERT INTO people
+(`name`, `height`, `weight`, `gender`, `birthdate`, `biography`)
+VALUES
+('George Ianev', 1.81, 85.5, 'm', '1989-10-20', 'голяма и дълга биография и тук');
+ 
+INSERT INTO people
+(`name`, `height`, `weight`, `gender`, `birthdate`, `biography`)
+VALUES
+('Томислав Дончев', 1.72, 78.2, 'm', '1971-10-20', 'голяма и дълга биография и тук - политик');
+ 
+INSERT INTO people
+(`name`, `height`, `weight`, `gender`, `birthdate`, `biography`)
+VALUES
+('Светлана Бобева', 1.65, 62, 'f', '1988-2-20', 'голяма и дълга биография и тук - политик');
+ 
+INSERT INTO people
+(`name`, `height`, `weight`, `gender`, `birthdate`, `biography`)
+VALUES
+('Jordan Ostreff', 1.92, 112, 'm', '1970-2-9', 'голяма и дълга биография и тук - политик');
+ 
+#07. Create Table Users
+drop table users;
+create table users(
+    `id` BIGINT auto_increment unique,
+    `username` VARCHAR(30) not null,
+    `password` VARCHAR(26) not null,
+    `profile_picture` BLOB,
+    `last_login_time` datetime,
+    `is_deleted` boolean DEFAULT false
+);
+ALTER TABLE users ADD PRIMARY KEY(`id`);
+ 
+INSERT INTO users
+(`username`, `password`, `profile_picture`, `last_login_time`)
+VALUES
+('Jordan', 'hello', 'my picture', '1970-2-9');
+ 
+INSERT INTO users
+(`username`, `password`, `last_login_time`)
+VALUES
+('Todor', 'hello', '2019-2-9');
+ 
+INSERT INTO users
+(`username`, `password`, `last_login_time`)
+VALUES
+('Krum', 'NewPass', '2019-2-9');
+ 
+INSERT INTO users
+(`username`, `password`, `last_login_time`)
+VALUES
+('Bozidar', 'hello', '2019-2-9 12:45:17');
+ 
+INSERT INTO users
+(`username`, `password`, `last_login_time`)
+VALUES
+('Pitanka', 'hello', '2019-5-15 18:23:00');
+ 
+#08. Change Primary Key
+drop table users;
+create table users(
+    `id` BIGINT auto_increment PRIMARY KEY,
+    `username` VARCHAR(30) not null,
+    `password` VARCHAR(26) not null,
+    `profile_picture` BLOB,
+    `last_login_time` datetime,
+    `is_deleted` boolean DEFAULT false
+);
+ALTER TABLE `users` CHANGE  `id`  `id` BIGINT NOT NULL AUTO_INCREMENT UNIQUE;
+ALTER TABLE `users` DROP PRIMARY KEY;
+ALTER TABLE `users` ADD PRIMARY KEY(`id`, `username`);
+ 
+#9. Set Default Value of a Field
+ALTER TABLE `users` CHANGE `last_login_time` `last_login_time` datetime DEFAULT CURRENT_TIMESTAMP;
+ 
+#10. Set Unique Field
+ALTER TABLE `users` CHANGE  `username`  `username` VARCHAR(30) not null UNIQUE;
+ALTER TABLE `users` CHANGE  `id`  `id` BIGINT NOT NULL AUTO_INCREMENT UNIQUE;
+ALTER TABLE `users` DROP PRIMARY KEY;
+ALTER TABLE `users` ADD PRIMARY KEY(`id`);
+ 
+#11. Movies Database
+CREATE TABLE `directors` (
+    `id`            INT AUTO_INCREMENT PRIMARY KEY,
+    `director_name` VARCHAR(50) NOT NULL,
+    `notes`         VARCHAR (255) collate utf8mb4_unicode_ci
+);
+CREATE TABLE `genres` (
+    `id`            INT AUTO_INCREMENT PRIMARY KEY,
+    `genre_name`    VARCHAR(50) NOT NULL,
+    `notes`         VARCHAR (255) collate utf8mb4_unicode_ci
+);
+CREATE TABLE `categories` (
+    `id`            INT AUTO_INCREMENT PRIMARY KEY,
+    `category_name` VARCHAR(50) NOT NULL,
+    `notes`         VARCHAR (255) collate utf8mb4_unicode_ci
+);
+CREATE TABLE `movies` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `title` VARCHAR(50) NOT NULL,
+    `director_id` INT,
+    `copyright_year` INT,
+    `length` INT,
+    `genre_id` INT,
+    `category_id` INT,
+    `rating` INT,
+    `notes` VARCHAR(255) COLLATE UTF8MB4_UNICODE_CI
+);
+ 
+INSERT INTO `directors` (`director_name`, `notes`) VALUES ('Pitanka', 'hello');
+INSERT INTO `directors` (`director_name`, `notes`) VALUES ('Pitanka', 'hello');
+INSERT INTO `directors` (`director_name`, `notes`) VALUES ('Pitanka', 'hello');
+INSERT INTO `directors` (`director_name`, `notes`) VALUES ('Pitanka', 'hello');
+INSERT INTO `directors` (`director_name`, `notes`) VALUES ('Pitanka', 'hello');
+ 
+INSERT INTO `genres` (`genre_name`, `notes`) VALUES ('comedy', 'hello');
+INSERT INTO `genres` (`genre_name`, `notes`) VALUES ('comedy', 'hello');
+INSERT INTO `genres` (`genre_name`, `notes`) VALUES ('comedy', 'hello');
+INSERT INTO `genres` (`genre_name`, `notes`) VALUES ('comedy', 'hello');
+INSERT INTO `genres` (`genre_name`, `notes`) VALUES ('comedy', 'hello');
+ 
+INSERT INTO `categories` (`category_name`, `notes`) VALUES ('big entertiment', 'hello');
+INSERT INTO `categories` (`category_name`, `notes`) VALUES ('big entertiment', 'hello');
+INSERT INTO `categories` (`category_name`, `notes`) VALUES ('big entertiment', 'hello');
+INSERT INTO `categories` (`category_name`, `notes`) VALUES ('big entertiment', 'hello');
+INSERT INTO `categories` (`category_name`, `notes`) VALUES ('big entertiment', 'hello');
+ 
+INSERT INTO `movies` (`title`, `notes`) VALUES ('Ransom', 'hello');
+INSERT INTO `movies` (`title`, `notes`) VALUES ('Ransom', 'hello');
+INSERT INTO `movies` (`title`, `notes`) VALUES ('Ransom', 'hello');
+INSERT INTO `movies` (`title`, `notes`) VALUES ('Ransom', 'hello');
+INSERT INTO `movies` (`title`, `notes`) VALUES ('Ransom', 'hello');
+ 
+DROP DATABASE minions;
+ 
+#12. Car Rental Database
+DROP DATABASE `car_rentals`;
+CREATE DATABASE `car_rentals`;
+USE `car_rentals`;
+ 
+CREATE TABLE `categories` (
+    `id` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `category` ENUM('sedan', 'van', 'combi'),
+    `daily_rate` DOUBLE(8,2) NOT NULL DEFAULT 0,
+    `weekly_rate` DOUBLE(8,2),
+    `monthly_rate` DOUBLE(8,2),
+    `weekend_rate` DOUBLE(8,2)
+);
+CREATE TABLE `cars` (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    plate_number VARCHAR(20) NOT NULL,
+    make DATETIME,
+    model VARCHAR(30),
+    car_year YEAR,
+    category_id INT,
+    doors INT,
+    picture BLOB,
+    car_condition VARCHAR(200) COLLATE UTF8MB4_UNICODE_CI,
+    available BOOLEAN DEFAULT true
+);
+CREATE TABLE employees (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    first_name VARCHAR(30) NOT NULL,
+    last_name VARCHAR(30) NOT NULL,
+    title ENUM ('Mr', 'Mrs', 'Ms') DEFAULT 'Mr',
+    notes VARCHAR(255) COLLATE UTF8MB4_UNICODE_CI
+);
+CREATE TABLE customers (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    driver_licence_number INT NOT NULL,
+    full_name VARCHAR(50) NOT NULL,
+    address VARCHAR(100) NOT NULL,
+    city VARCHAR(50),
+    zip_code VARCHAR(50),
+    notes VARCHAR(255) COLLATE UTF8MB4_UNICODE_CI
+);
+CREATE TABLE rental_orders (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    employee_id INT NOT NULL,
+    customer_id INT NOT NULL,
+    car_id INT NOT NULL,
+    car_condition VARCHAR(200) COLLATE UTF8MB4_UNICODE_CI,
+    tank_level ENUM ('full', 'middle', 'empty') NOT NULL,
+    kilometrage_start INT,
+    kilometrage_end INT,
+    total_kilometrage INT,
+    start_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    end_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    total_days DOUBLE(8,2) NOT NULL,
+    rate_applied DOUBLE(8,2) NOT NULL,
+    tax_rate DOUBLE(8,2),
+    order_status ENUM ('OK', 'whaiting', 'descr') DEFAULT 'whaiting',
+    notes VARCHAR(255) COLLATE UTF8MB4_UNICODE_CI
+);
+ 
+INSERT INTO `categories` (`category`, `daily_rate`) VALUES ('van', 122.4);
+INSERT INTO `categories` (`category`, `daily_rate`) VALUES ('sedan', 108.4);
+INSERT INTO `categories` (`category`, `daily_rate`) VALUES ('combi', 112.4);
+ 
+INSERT INTO `cars` (plate_number, make, model, car_year) VALUES ('CA1288XM', '2017-5-15 18:23:00', 'VW', 2017);
+INSERT INTO `cars` (plate_number, make, model, car_year) VALUES ('CA1289XM', '2016-5-15 18:23:00', 'VW', 2016);
+INSERT INTO `cars` (plate_number, make, model, car_year) VALUES ('CA1278XM', '2015-5-15 18:23:00', 'VW', 2015);
+ 
+INSERT INTO `employees` (first_name, last_name, notes) VALUES ('ton4o', 'tokmak4iev', 'нещо не ми харедва');
+INSERT INTO `employees` (first_name, last_name, notes) VALUES ('stilian', 'bozkov', 'този е екстра');
+INSERT INTO `employees` (first_name, last_name, notes) VALUES ('Poni', 'Tenev', 'хмммм....');
+ 
+INSERT INTO `customers` (driver_licence_number, full_name, address) VALUES (122450, 'Tokamak Tomov', 'somewhere in Bulgaria');
+INSERT INTO `customers` (driver_licence_number, full_name, address) VALUES (122313, 'Pilat Tomov', 'somewhere in Bulgaria');
+INSERT INTO `customers` (driver_licence_number, full_name, address) VALUES (122212, 'Svetlin Tomov', 'somewhere in Bulgaria');
+ 
+INSERT INTO `rental_orders`
+(employee_id, customer_id, car_id, tank_level, total_kilometrage, total_days, rate_applied)
+VALUES
+(1, 1, 1, 'full', 21520, 8.44, 144.55);
+INSERT INTO `rental_orders`
+(employee_id, customer_id, car_id, tank_level, total_kilometrage, total_days, rate_applied)
+VALUES
+(2, 2, 2, 'middle', 21420, 8.44, 144.55);
+INSERT INTO `rental_orders`
+(employee_id, customer_id, car_id, tank_level, total_kilometrage, total_days, rate_applied)
+VALUES
+(2, 2, 1, 'full', 213320, 8.44, 144.55);
+ 
+#13. Hotel Database
+DROP DATABASE `Hotel`;
+CREATE DATABASE `Hotel`;
+USE `Hotel`;
+ 
+CREATE TABLE employees (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(30) NOT NULL,
+    last_name VARCHAR(30) NOT NULL,
+    title ENUM ('Ceo', 'maid', 'accountant'),
+    notes VARCHAR(255) COLLATE UTF8MB4_UNICODE_CI
+);
+ 
+INSERT INTO employees (first_name, last_name) VALUE ('Petar', 'Petrov');
+INSERT INTO employees (first_name, last_name, notes) VALUE ('Stoman', 'Stimev', 'Говедо!');
+INSERT INTO employees (first_name, last_name, title, notes) VALUE ('Snegana', 'Snegeva', 'maid', 'Много работи!');
+ 
+CREATE TABLE customers (
+    account_number VARCHAR(20) NOT NULL PRIMARY KEY,
+    first_name VARCHAR(30) NOT NULL,
+    last_name VARCHAR(30) NOT NULL,
+    phone_number VARCHAR(30),
+    emergency_name VARCHAR(30) NOT NULL,
+    emergency_number VARCHAR(20) NOT NULL,
+    notes VARCHAR(255) COLLATE UTF8MB4_UNICODE_CI
+);
+ 
+INSERT INTO customers
+(account_number, first_name, last_name, emergency_name, emergency_number)
+VALUE
+('1Q2AXX56-77', 'Borimir', 'Me4kata', 'Me4o', '222-456');
+INSERT INTO customers
+(account_number, first_name, last_name, emergency_name, emergency_number)
+VALUE
+('1Q2AXX56-78', 'Boliarka', 'Teneva', 'Bolka', '222-455');
+INSERT INTO customers
+(account_number, first_name, last_name, emergency_name, emergency_number)
+VALUE
+('1Q2AXX56-79', 'Sevarin', 'Sivev', 'Siveto', '222-446');
+ 
+CREATE TABLE room_status (
+    room_status ENUM ('busy', 'free', 'unknown') PRIMARY KEY,
+    notes VARCHAR(255) COLLATE UTF8MB4_UNICODE_CI
+);
+ 
+INSERT INTO room_status (room_status, notes) VALUE ('busy', 'когато е заета и господ не може да помогне');
+INSERT INTO room_status (room_status, notes) VALUE ('free', 'свободна стая - шефа ще се сърди!');
+INSERT INTO room_status (room_status, notes) VALUE ('unknown', 'неизвестния статус - някой си играе итрички :)');
+ 
+CREATE TABLE room_types (
+    room_type ENUM ('small', 'studio', 'apartment') PRIMARY KEY,
+    notes VARCHAR(255) COLLATE UTF8MB4_UNICODE_CI
+);
+ 
+INSERT INTO room_types (room_type, notes) VALUE ('studio', 'много приятно за млади семейства');
+INSERT INTO room_types (room_type, notes) VALUE ('small', 'търсещ коч');
+INSERT INTO room_types (room_type, notes) VALUE ('apartment', 'ума ми не побира кой може да си позволи такава цена :)');
+ 
+CREATE TABLE bed_types  (
+    bed_type ENUM ('double', 'single', 'triple') PRIMARY KEY,
+    notes VARCHAR(255) COLLATE UTF8MB4_UNICODE_CI
+);
+ 
+INSERT INTO bed_types (bed_type, notes) VALUE ('double', 'много приятно за млади семейства (без деца)');
+INSERT INTO bed_types (bed_type, notes) VALUE ('single', 'коч');
+INSERT INTO bed_types (bed_type, notes) VALUE ('triple', 'ума ми не побира кой може да го иска, пък и защо :)');
+ 
+CREATE TABLE rooms (
+    room_number INT PRIMARY KEY,
+    room_type ENUM ('small', 'studio', 'apartment'),
+    bed_type ENUM ('double', 'single', 'triple'),
+    rate DOUBLE(8,2),
+    room_status ENUM ('busy', 'free', 'unknown'),
+    notes VARCHAR(255) COLLATE UTF8MB4_UNICODE_CI
+);
+ 
+INSERT INTO rooms
+(room_number, room_type, bed_type, rate, room_status, notes)
+VALUE
+(16, 'small', 'double', 23.45, 'unknown', 'прекрасен изглед към мръсния заден двор!');
+INSERT INTO rooms
+(room_number, room_type, bed_type, rate, room_status, notes)
+VALUE
+(12, 'studio', 'double', 53.45, 'unknown', 'прекрасен изглед към мръсния заден двор!');
+INSERT INTO rooms
+(room_number, room_type, bed_type, rate, room_status, notes)
+VALUE
+(10, 'apartment', 'triple', 123.45, 'free', 'на този пък изгледа е към луната!');
+ 
+CREATE TABLE payments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    employee_id INT DEFAULT 0,
+    payment_date DATE,
+    account_number VARCHAR(20) NOT NULL,
+    first_date_occupied DATETIME DEFAULT CURRENT_TIMESTAMP,
+    last_date_occupied DATETIME DEFAULT CURRENT_TIMESTAMP,
+    total_days INT,
+    amount_charged DOUBLE(8,2) NOT NULL,
+    tax_rate DOUBLE,
+    tax_amount DOUBLE,
+    payment_total DOUBLE (8,2),
+    notes VARCHAR(255) COLLATE UTF8MB4_UNICODE_CI
+);
+ 
+INSERT INTO payments
+(employee_id, payment_date, account_number, total_days, amount_charged, payment_total, notes)
+VALUE
+(2, '2018-10-19', '1Q2AXX56-80', 12, 555.12, 555.12, 'много евтино!');
+INSERT INTO payments
+(employee_id, payment_date, account_number, total_days, amount_charged, payment_total, notes)
+VALUE
+(3, '2018-10-22', '1Q2AXX56-81', 5, 555.12, 555.12, 'много евтино!');
+INSERT INTO payments
+(employee_id, payment_date, account_number, total_days, amount_charged, payment_total, notes)
+VALUE
+(4, '2018-8-19', '1Q2AXX56-82', 7, 555.12, 555.12, 'много евтино!');
+ 
+CREATE TABLE occupancies (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    employee_id INT NOT NULL,
+    date_occupied DATE NOT NULL,
+    account_number VARCHAR(20) NOT NULL,
+    room_number INT NOT NULL,
+    rate_applied DOUBLE (8,2),
+    phone_charge DOUBLE,
+    notes VARCHAR(255) COLLATE UTF8MB4_UNICODE_CI
+);
+ 
+INSERT INTO occupancies
+(employee_id, date_occupied, account_number, room_number, rate_applied)
+VALUE
+(2, '2019-10-15', '1Q2AXX56-82', 16, 255.16);
+INSERT INTO occupancies
+(employee_id, date_occupied, account_number, room_number, rate_applied)
+VALUE
+(2, '2019-10-11', '1Q2AXX56-82', 12, 25.16);
+INSERT INTO occupancies
+(employee_id, date_occupied, account_number, room_number, rate_applied)
+VALUE
+(2, '2019-10-13', '1Q2AXX56-82', 11, 285.16);
+ 
+#14. Create SoftUni Database
+DROP DATABASE `soft_uni`;
+CREATE DATABASE `soft_uni`;
+USE `soft_uni`;
+ 
+CREATE TABLE towns (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL
+);
+ 
+CREATE TABLE addresses (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    address_text VARCHAR(50) NOT NULL,
+    town_id INT,
+    FOREIGN KEY (town_id) REFERENCES towns(id)
+);
+ 
+CREATE TABLE departments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL
+);
+ 
+CREATE TABLE employees (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(30) NOT NULL,
+    middle_name VARCHAR(30) DEFAULT NULL,
+    last_name VARCHAR(30) NOT NULL,
+    job_title ENUM ('Senior Engineer','.NET Developer','Intern','CEO') DEFAULT 'Intern',
+    department_id INT,
+    hire_date DATE,
+    salary DOUBLE,
+    address_id INT,
+    FOREIGN KEY (department_id) REFERENCES departments(id),
+    FOREIGN KEY (address_id) REFERENCES addresses(id)
+);
+ 
+#15. Basic Insert
+ 
+#towns: Sofia, Plovdiv, Varna, Burgas
+INSERT INTO towns (name) VALUE ('Sofia');
+INSERT INTO towns (name) VALUE ('Plovdiv');
+INSERT INTO towns (name) VALUE ('Varna');
+INSERT INTO towns (name) VALUE ('Burgas');
+ 
+#INSERT INTO addresses (address_text, town_id) VALUE ('Babini devetini, str', 1);
+#INSERT INTO addresses (address_text, town_id) VALUE ('Krajbrejna, blvd', 3);
+#INSERT INTO addresses (address_text, town_id) VALUE ('Kliment Ohridski, blvd', 1);
+#INSERT INTO addresses (address_text, town_id) VALUE ('Maritsa, blvd', 2);
+ 
+#departments: Engineering, Sales, Marketing, Software Development, Quality Assurance
+INSERT INTO departments (name) VALUE ('Engineering');
+INSERT INTO departments (name) VALUE ('Sales');
+INSERT INTO departments (name) VALUE ('Marketing');
+INSERT INTO departments (name) VALUE ('Software Development');
+INSERT INTO departments (name) VALUE ('Quality Assurance');
+ 
+#employees:
+INSERT  INTO employees
+(first_name, middle_name, last_name, job_title, department_id, hire_date, salary)
+        VALUE
+('Ivan', 'Ivanov', 'Ivanov', '.NET Developer', 4, '2013-02-01', 3500 );
+ 
+INSERT  INTO employees
+(first_name, middle_name, last_name, job_title, department_id, hire_date, salary)
+        VALUE
+('Petar', 'Petrov', 'Petrov', 'Senior Engineer', 1, '2004-03-02', 4000 );
+ 
+INSERT  INTO employees
+(first_name, middle_name, last_name, job_title, department_id, hire_date, salary)
+        VALUE
+('Maria', 'Petrova', 'Ivanova', 'Intern', 5, '2016-08-28', 525.25 );
+ 
+INSERT  INTO employees
+(first_name, middle_name, last_name, job_title, department_id, hire_date, salary)
+        VALUE
+('Georgi', 'Terziev', 'Ivanov', 'CEO', 2, '2007-12-09', 3000 );
+ 
+INSERT  INTO employees
+(first_name, middle_name, last_name, job_title, department_id, hire_date, salary)
+        VALUE
+('Peter', 'Pan', 'Pan', 'Intern', 3, '2016-08-28', 599.88 );
+ 
+#16. Basic Select All Fields
+SELECT * FROM towns;
+SELECT * FROM departments;
+SELECT * FROM employees;
+ 
+#17. Basic Select All Fields and Order Them
+SELECT * FROM towns ORDER BY name;
+SELECT * FROM departments ORDER BY name;
+SELECT * FROM employees ORDER BY salary DESC;
+ 
+#18. Basic Select Some Fields
+SELECT name FROM towns ORDER BY name;
+SELECT name FROM departments ORDER BY name;
+SELECT first_name, last_name, job_title, salary FROM employees ORDER BY salary DESC;
+ 
+#19. Increase Employees Salary
+SELECT (`salary` * 1.1) as s FROM employees;
+ 
+#20. Decrease Tax Rate
+SELECT (tax_rate * 0.97) FROM payments;
+ 
+#21. Delete All Records
+DELETE QUICK from occupancies;
+DELETE QUICK from employees;
+ 
+DROP TABLE occupancies;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
