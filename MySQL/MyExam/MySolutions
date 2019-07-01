@@ -1,0 +1,222 @@
+MY EXAM
+CREATE TABLE branches (
+	id INT(11) PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(30) NOT NULL UNIQUE
+);
+
+CREATE TABLE employees (
+	id INT(11) PRIMARY KEY AUTO_INCREMENT,
+    first_name VARCHAR(20) NOT NULL,
+    last_name VARCHAR(20) NOT NULL,
+    salary DECIMAL(10,2) NOT NULL,
+    started_on DATE NOT NULL,
+    branch_id INT(11) NOT NULL,
+    CONSTRAINT fk_employees_branches
+    FOREIGN KEY (branch_id) REFERENCES branches(id)
+);
+
+CREATE TABLE clients (
+	id INT(11) PRIMARY KEY AUTO_INCREMENT,
+    full_name VARCHAR(50) NOT NULL,
+    age INT(11) NOT NULL
+);
+
+CREATE TABLE employees_clients (
+    employee_id INT(11),
+    client_id INT(11),
+    CONSTRAINT fk_employees_clients_employees
+    FOREIGN KEY (employee_id) REFERENCES employees(id),
+    CONSTRAINT fk_employees_clients_clients
+    FOREIGN KEY (client_id) REFERENCES clients(id)
+);
+
+CREATE TABLE bank_accounts (
+	id INT(11) PRIMARY KEY AUTO_INCREMENT,
+    account_number VARCHAR(10) NOT NULL,
+    balance DECIMAL(10,2) NOT NULL,
+    client_id INT(11) NOT NULL UNIQUE,
+    CONSTRAINT fk_bank_accounts_clients
+    FOREIGN KEY (client_id) REFERENCES clients(id)
+);
+
+
+CREATE TABLE cards (
+	id INT(11) PRIMARY KEY AUTO_INCREMENT,
+    card_number VARCHAR(19) NOT NULL,
+    card_status VARCHAR(7) NOT NULL,
+    bank_account_id INT(11) NOT NULL,
+    CONSTRAINT fk_cards_bank_accounts
+    FOREIGN KEY (bank_account_id) REFERENCES bank_accounts(id)
+);
+
+
+
+
+INSERT INTO cards(card_number, card_status, bank_account_id)
+SELECT	DISTINCT REVERSE(cl.full_name),
+       'Active',
+       cl.id
+FROM clients cl
+JOIN bank_accounts ba
+ON ba.client_id = cl.id
+LEFT JOIN cards cd
+ON ba.id = cd.bank_account_id
+WHERE cl.`id` BETWEEN 191 AND 200;
+
+SELECT * FROM clients WHERE `id` BETWEEN 191 AND 200;
+SELECT COUNT(id) FROM cards;
+
+
+SELECT empc.employee_id
+FROM clients cl
+LEFT JOIN employees_clients empc
+ON cl.id = empc.client_id
+GROUP BY empc.employee_id
+HAVING empc.employee_id IS NOT NULL
+ORDER BY count(cl.id), empc.employee_id 
+LIMIT 1;
+
+
+SELECT *
+FROM clients cl
+LEFT JOIN employees_clients empc
+ON cl.id = empc.client_id;
+
+
+UPDATE employees_clients ec
+SET ec.employee_id = 10
+WHERE ec.employee_id = ec.client_id;
+
+UPDATE employees_clients ec
+SET ec.employee_id = (SELECT * FROM 
+(SELECT empc.employee_id
+FROM clients cl
+LEFT JOIN employees_clients empc
+ON cl.id = empc.client_id
+GROUP BY empc.employee_id
+HAVING empc.employee_id IS NOT NULL
+ORDER BY count(cl.id), empc.employee_id 
+LIMIT 1
+) as tbl)
+WHERE ec.employee_id = ec.client_id;
+
+SELECT employee_id, count(client_id) as 'count'
+FROM employees_clients
+GROUP BY employee_id
+ORDER BY `count`, employee_id;
+
+
+SELECT employee_id, count(client_id)
+FROM employees_clients
+GROUP BY employee_id
+ORDER BY count(client_id), employee_id;
+LIMIT 1;
+
+SELECT * FROM employees_clients;
+
+DELETE FROM employees
+WHERE id NOT IN (SELECT DISTINCT employee_id FROM employees_clients);
+
+SELECT DISTINCT employee_id FROM employees_clients;
+
+
+SELECT id, full_name FROM clients
+ORDER BY id;
+
+
+SELECT id, CONCAT(first_name,' ' ,last_name) as full_name, CONCAT('$',salary), started_on
+FROM employees
+WHERE salary >= 100000 AND started_on >= date('2018-01-01')
+ORDER BY salary DESC, id;
+
+
+SELECT cd.id, concat(cd.card_number, ' : ',cl.full_name) as card_token
+FROM cards cd
+JOIN bank_accounts ba
+ON ba.id = cd.bank_account_id
+JOIN clients cl
+ON ba.client_id = cl.id
+ORDER BY cd.id DESC;
+
+
+SELECT concat(emp.first_name, ' ' , emp.last_name) as name, emp.started_on, COUNT(ec.client_id) as count_of_clients
+FROM employees emp
+JOIN employees_clients ec
+ON emp.id = ec.employee_id
+GROUP BY ec.employee_id
+ORDER BY count_of_clients DESC, ec.employee_id
+LIMIT 5;
+
+
+SELECT br.name as name, IFNULL(count(cd.id), 0) as count_of_cards
+FROM branches br
+LEFT JOIN employees emp
+ON br.id = emp.branch_id
+LEFT JOIN employees_clients ec
+ON emp.id = ec.employee_id
+LEFT JOIN clients cl
+ON ec.client_id = cl.id
+LEFT JOIN bank_accounts ba
+ON cl.id = ba.client_id
+LEFT JOIN cards cd
+ON ba.id = cd.bank_account_id
+GROUP BY br.name
+ORDER BY count_of_cards DESC , br.name;
+
+
+DELIMITER $$
+CREATE FUNCTION udf_client_cards_count(name VARCHAR(30))
+RETURNS INT
+BEGIN
+		DECLARE c_count INT;
+        SET c_count := (
+			SELECT COUNT(cd.id) 
+			FROM cards AS cd
+			JOIN bank_accounts AS ba
+			ON cd.bank_account_id = ba.id
+			JOIN clients AS cl
+			ON ba.client_id = cl.id
+			WHERE cl.full_name = name
+		);
+                        
+		RETURN c_count;
+END; $$
+
+DELIMITER ;
+
+SELECT udf_client_cards_count('Baxy David');
+
+
+SELECT COUNT(cd.id) 
+FROM cards AS cd
+JOIN bank_accounts AS ba
+ON cd.bank_account_id = ba.id
+JOIN clients AS cl
+ON ba.client_id = cl.id
+WHERE cl.full_name = 'Baxy David';
+
+
+
+
+
+
+
+
+DELIMITER $$
+CREATE PROCEDURE udp_clientinfo (full_name VARCHAR(50))
+BEGIN
+SELECT full_name, age, account_number, CONCAT('$', balance) as balance
+FROM clients cl
+JOIN bank_accounts ba
+ON cl.id = ba.client_id
+WHERE cl.full_name = full_name;
+	
+END; $$
+DELIMITER ;
+CALL udp_clientinfo ('Hunter Wesgate');
+
+SELECT full_name, age, account_number, CONCAT('$', balance) as balance
+FROM clients cl
+JOIN bank_accounts ba
+ON cl.id = ba.client_id
+WHERE full_name = 'Hunter Wesgate';
