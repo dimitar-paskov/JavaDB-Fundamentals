@@ -44,7 +44,7 @@ public class AppController implements CommandLineRunner {
             user.setLastTimeLoggedIn(LocalDateTime.now());
             user.setDeleted(false);
 
-            user.setFirstName("Ime");
+            user.setFirstName("Stoyan");
             user.setLastName("Imenski");
 
             user.setBornTown(sofia);

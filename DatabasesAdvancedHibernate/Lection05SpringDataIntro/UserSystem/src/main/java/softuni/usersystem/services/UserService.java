@@ -6,6 +6,5 @@ import softuni.usersystem.entities.User;
 
 public interface UserService {
 
-    long getUsersCount();
     void save(User user);
 }

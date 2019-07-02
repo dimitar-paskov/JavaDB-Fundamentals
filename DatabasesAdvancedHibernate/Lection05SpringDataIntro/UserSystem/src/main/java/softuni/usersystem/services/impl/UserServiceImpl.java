@@ -14,10 +14,6 @@ public class UserServiceImpl implements UserService{
         this.userRepository = userRepository;
     }
 
-    @Override
-    public long getUsersCount() {
-        return this.userRepository.count();
-    }
 
     @Override
     public void save(User user) {

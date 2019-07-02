@@ -10,9 +10,4 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer>{
 
-    List<User> findAllByEmailEndingWith(String end);
-
-    List<User> findAllByLastTimeLoggedInBefore(LocalDateTime dateTime);
-
-    List<User> findAllByAgeBetween(int lowBound, int highBound);
 }
