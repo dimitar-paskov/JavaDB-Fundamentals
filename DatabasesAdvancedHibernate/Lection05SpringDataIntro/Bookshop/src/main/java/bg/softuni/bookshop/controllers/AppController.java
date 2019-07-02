@@ -31,6 +31,7 @@ public class AppController implements CommandLineRunner {
         this.bookService.seedBooks();
 
 //        allBooks();
+        // Comment added
         allAuthors();
 
     }
