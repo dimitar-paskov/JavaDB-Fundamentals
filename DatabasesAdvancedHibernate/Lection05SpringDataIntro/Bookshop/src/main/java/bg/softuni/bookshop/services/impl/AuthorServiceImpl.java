@@ -8,12 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthorServiceImpl implements AuthorService{
 
 
-    private final static String AUTHOR_FILE_PATH = "/media/D/Programming/SoftUni/8.Java DB Fundamentals/DatabasesAdvancedHibernate/Lection05SpringDataIntro/Bookshop/src/main/resources/files/authors.txt";
+    private final static String AUTHOR_FILE_PATH = "src/main/resources/files/authors.txt";
 
     private final AuthorRepository authorRepository;
     private final FileUtil fileUtil;
@@ -46,5 +48,15 @@ public class AuthorServiceImpl implements AuthorService{
 
 
 
+    }
+
+    @Override
+    public List<String> getAuthorsByPublishedBooksCount() {
+        return this.authorRepository
+                .findAuthorsByOrderOfPublishedBooksDesc()
+                .stream()
+                .map(author -> String.format("%s %s - %d books",
+                        author.getFirstName(), author.getLastName(), author.getBooks().size()))
+                .collect(Collectors.toList());
     }
 }

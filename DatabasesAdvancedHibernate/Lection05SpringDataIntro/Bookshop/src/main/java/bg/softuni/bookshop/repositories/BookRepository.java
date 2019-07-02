@@ -15,4 +15,8 @@ public interface BookRepository extends JpaRepository<Book, Integer>{
 
 
     List<Book> findAllByReleaseDateBefore(LocalDate date);
+
+    List<Book> getAllByAuthorFirstNameAndAuthorLastNameOrderByReleaseDateDescTitleAsc
+            (String firstName, String lastName);
+
 }

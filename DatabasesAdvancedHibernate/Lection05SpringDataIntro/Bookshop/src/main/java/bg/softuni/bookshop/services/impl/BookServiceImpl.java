@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class BookServiceImpl implements BookService {
 
-    private final static String BOOKS_FILE_PATH = "/media/D/Programming/SoftUni/8.Java DB Fundamentals/DatabasesAdvancedHibernate/Lection05SpringDataIntro/Bookshop/src/main/resources/files/books.txt";
+    private final static String BOOKS_FILE_PATH = "src/main/resources/files/books.txt";
 
 
 
@@ -115,6 +115,16 @@ public class BookServiceImpl implements BookService {
                 .collect(Collectors.toList());
 
 
+    }
+
+    @Override
+    public List<String> getBooksTitleReleaseDateAndCopiesByAuthorNames(String firstName, String lastName) {
+        return this.bookRepository
+                .getAllByAuthorFirstNameAndAuthorLastNameOrderByReleaseDateDescTitleAsc(firstName, lastName)
+                .stream()
+                .map(b-> String.format("%s -> %s -> %s",
+                        b.getTitle(), b.getReleaseDate(), b.getCopies()))
+                .collect(Collectors.toList());
     }
 
     private Author randomAuthor(){

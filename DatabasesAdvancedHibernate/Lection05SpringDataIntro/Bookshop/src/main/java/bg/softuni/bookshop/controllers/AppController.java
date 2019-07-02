@@ -30,20 +30,27 @@ public class AppController implements CommandLineRunner {
         this.categoryService.seedCategory();
         this.bookService.seedBooks();
 
-//        allBooks();
-        // Comment added
-        allAuthors();
+        //zad1
+        this.bookService
+                .findAllTiles()
+                .forEach(System.out::println);
+
+        //zad2
+        this.bookService
+                .findAllAuthors()
+                .forEach(System.out::println);
+
+        //zad3
+        this.authorService
+                .getAuthorsByPublishedBooksCount()
+                .forEach(System.out::println);
+
+        //zad4
+        this.bookService
+                .getBooksTitleReleaseDateAndCopiesByAuthorNames("George", "Powell")
+                .forEach(System.out::println);
 
     }
 
-    private void allBooks() {
-        List<String> titles = this.bookService.findAllTiles();
-        titles.forEach(System.out::println);
-    }
 
-    private void allAuthors(){
-        List<String> authors = this.bookService.findAllAuthors();
-        authors.forEach(System.out::println);
-
-    }
 }

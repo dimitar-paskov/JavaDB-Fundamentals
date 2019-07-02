@@ -1,9 +1,6 @@
 package bg.softuni.bookshop.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Set;
 
 @Entity
@@ -35,7 +32,7 @@ public class Author extends BaseEntity {
         this.lastName = lastName;
     }
 
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)
     public Set<Book> getBooks() {
         return books;
     }

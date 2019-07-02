@@ -13,7 +13,7 @@ import java.io.IOException;
 @Service
 public class CategoryServiceImpl implements CategoryService{
 
-    private final static String CATEGORY_FILE_PATH = "/media/D/Programming/SoftUni/8.Java DB Fundamentals/DatabasesAdvancedHibernate/Lection05SpringDataIntro/Bookshop/src/main/resources/files/categories.txt";
+    private final static String CATEGORY_FILE_PATH = "src/main/resources/files/categories.txt";
 
 
     private final CategoryRepository categoryRepository;
